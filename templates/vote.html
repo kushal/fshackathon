@@ -7,14 +7,15 @@
 
 {% for team in teams %}
   <h2>{{ team.name|escape }}</h2>
-
+  {{ team.people|escape }}<br/>
   {{ team.location|escape }}
   <br/>
   {{ team.description|escape }}
   <br/>
-  <a href="{{ team.url|escape }}">{{ team.url|escape }}</a><br/>
-  <a href="{{ team.video|escape }}">video</a>
-
+  {% if team.url %}{{ team.url|urlize }}{% endif %}
+  {% if team.video %}{{ team.video|urlize }}{% endif %}
+  {% if team.screenshot %}{{ team.screenshot|urlize }}{% endif %}
+  
   <form action="vote" method="POST">
     <input type="hidden" name="vote" value="{{ team.key }}"/>
     <input type="submit" value="Vote for this!"/>

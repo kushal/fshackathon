@@ -26,7 +26,7 @@ class ReceiveVote(BaseHandler):
   def post(self):
     vote = self.request.get('vote')
     increment_vote(users.get_current_user(), vote)
-    self.render('received_vote', {})
+    self.render('vote_received', {})
 
 
 class Winners(BaseHandler):
@@ -50,10 +50,12 @@ class AddProject(BaseHandler):
   def post(self):  
     team = Team()
     team.name = self.request.get('name')
+    team.people = self.request.get('people')
     team.location = self.request.get('location')
     team.description = self.request.get('description')
     team.url = self.request.get('url')
     team.video = self.request.get('video')
+    team.screenshot = self.request.get('screenshot')
     team.votes = 0
     team.hackday = '092011'
     team.put()

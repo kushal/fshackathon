@@ -6,25 +6,31 @@
 <form method="POST" action="doadd">
 
 <div class="formlabel">NAME</div>
-<input type="text" name="name"/>
+<input type="text" name="name" size="80"/>
+
+<div class="formlabel">TEAM MEMBERS</div>
+<input type="text" name="people" size="80"/>
 
 <div class="formlabel">LOCATION</div>
 <select name="location">
-<option>Tokyo</option>
 <option>New York</option>
 <option>San Francisco</option>
+<option>Tokyo</option>
 <option>Paris</option>
 </select>
 
 <div class="formlabel">DESCRIPTION</div>
-<textarea name="description"></textarea>
+<textarea cols=80 rows=4 name="description"></textarea>
 
 <div class="formlabel">URL</div>
-<input type="text" name="url"/>
+<input type="text" name="url" size="80"/>
 
-<div class="formlabel">VIDEO</div>
-<input type="text" name="video"/>
+<div class="formlabel">VIDEO URL</div>
+<input type="text" name="video" size="80"/>
 
+<div class="formlabel">SCREENSHOT URL</div>
+<input type="text" name="screenshot" size="80"/>
+<br/>
 <input type="submit"/>
 </form>
 

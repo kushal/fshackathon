@@ -1,33 +1,49 @@
 from google.appengine.ext import db
 
 class Team(db.Model):
+  user = db.UserProperty()
   name = db.StringProperty()
+  hackday = db.StringProperty()
   location = db.StringProperty()
+  people = db.StringProperty()
   description = db.StringProperty()
   url = db.StringProperty()
   video = db.StringProperty()
+  screenshot = db.StringProperty()
   votes = db.IntegerProperty()
-  hackday = db.StringProperty()
-  user = db.UserProperty()
   
 class Vote(db.Model):
   user = db.UserProperty()
-  vote = db.ReferenceProperty(Team)
+  team = db.ReferenceProperty(Team)
 
 def do_increment_vote(user, team_to_vote_for):
     vote = Vote.get_by_key_name(user.email())
     if vote:
         old_team = vote.team
         old_team.votes -=1
-        old_team.put()
     else:
         vote = Vote(ke_namey = user.email())
         vote.user = user
     team = Team.get_by_key_name(team_to_vote_for)
     team.votes += 1
+    db.put([team, vote])
+
+def update_team(team_id, amount):
+    team = Team.get(team_id)
+    team.votes += amount
     team.put()
+    
+def update_vote(user, team, vote):
+    if vote is None:
+        vote = Vote(key_name = user.email())
+        vote.user = user
+    vote.team = team
     vote.put()
         
 def increment_vote(user, team):
-    db.run_in_transaction(do_increment_vote, user, team)
+    vote = Vote.get_by_key_name(user.email())
+    if vote:
+        db.run_in_transaction(update_team, vote.team.key(), -1)
+    db.run_in_transaction(update_team, team, 1)
+    db.run_in_transaction(update_vote, user, Team.get(team), vote)
     
