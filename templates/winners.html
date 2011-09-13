@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Teams</h1>
+
+{% for team in teams %}
+  <h2>{{ team.name }}</h2>
+
+  {{ team.location }}
+  <br/>
+  {{ team.description }}
+  <br/>
+  <a href="{{ team.url }}">{{ team.url }}</a>
+  <br/>
+  <a href="{{ team.video }}">video</a>
+  <br/>
+  {{ team.votes }} votes  
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,44 @@
+body {
+	font-family: Arial, Helvetica, Geneva, sans-serif;
+	color: white;
+	padding: 20px;
+	margin: 0;
+	background-color: #7ABBEC;
+}
+
+.venuetop {
+	height: 110px;
+	margin-bottom: 10px;
+}
+
+.venuephoto {
+  float: left;
+  padding-right: 10px;
+}
+
+.venuename {
+  font-size: 32px
+}
+
+.oneperson {
+  float: left;
+  margin: 0 10px 10px 0;
+}
+
+.oneperson img {
+  padding: 1px;
+  background-color: white;
+}
+
+#tweets {
+  float: right;
+  width: 300px;
+}
+
+.tweet {
+  margin-bottom: 10px;
+}
+
+.author {
+  font-size: 10px;
+}

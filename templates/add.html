@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Submit your project!</h1>
+
+<form method="POST" action="doadd">
+
+<div class="formlabel">NAME</div>
+<input type="text" name="name"/>
+
+<div class="formlabel">LOCATION</div>
+<select name="location">
+<option>Tokyo</option>
+<option>New York</option>
+<option>San Francisco</option>
+<option>Paris</option>
+</select>
+
+<div class="formlabel">DESCRIPTION</div>
+<textarea name="description"></textarea>
+
+<div class="formlabel">URL</div>
+<input type="text" name="url"/>
+
+<div class="formlabel">VIDEO</div>
+<input type="text" name="video"/>
+
+<input type="submit"/>
+</form>
+
+{% endblock %}
