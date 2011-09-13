@@ -16,18 +16,6 @@ class Vote(db.Model):
   user = db.UserProperty()
   team = db.ReferenceProperty(Team)
 
-def do_increment_vote(user, team_to_vote_for):
-    vote = Vote.get_by_key_name(user.email())
-    if vote:
-        old_team = vote.team
-        old_team.votes -=1
-    else:
-        vote = Vote(ke_namey = user.email())
-        vote.user = user
-    team = Team.get_by_key_name(team_to_vote_for)
-    team.votes += 1
-    db.put([team, vote])
-
 def update_team(team_id, amount):
     team = Team.get(team_id)
     team.votes += amount
