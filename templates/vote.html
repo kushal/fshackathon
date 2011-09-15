@@ -5,21 +5,36 @@
 
 <a href="add">Add a team</a>
 
-{% for team in teams %}
-  <h2>{{ team.name|escape }}</h2>
-  {{ team.people|escape }}<br/>
-  {{ team.location|escape }}
-  <br/>
-  {{ team.description|escape }}
-  <br/>
-  {% if team.url %}{{ team.url|urlize }}{% endif %}
-  {% if team.video %}{{ team.video|urlize }}{% endif %}
-  {% if team.screenshot %}{{ team.screenshot|urlize }}{% endif %}
+<div class="content">
+
+  {% for team in teams %}
+    <div class="entryDetail" style="margin:10px; height:500px; float:left; width: 300px; background-color:#ffffff; line-height: 18px;">
+
+         <h2 class="hackName">{{ team.name|escape }}</h2>
+
+          <div class="authors">{{ team.people|escape }}<br/>
+          <span class="location">in {{ team.location|escape }}</span>
+          <br/></div><br/>
+
+          <div class="description" style="text-overflow: ellipsis;">
+          {{ team.description|escape }}
+          </div>
+
+        {% if team.url %}  {{ team.url|urlize }}{% endif %} <br/>
+        {% if team.video %}{{ team.video|urlize }}{% endif %} <br/>
+        {% if team.screenshot %}<img style="max-width:275px; max-height:150px;" src="{{ team.screenshot }}">{% endif %}
+
+        <form action="vote" method="POST">
+            <input type="hidden" name="vote" value="{{ team.key }}"/>
+            <input type="submit" value="WANT"/>
+        </form>
+    </div>
+
+
+</div>
+
+
   
-  <form action="vote" method="POST">
-    <input type="hidden" name="vote" value="{{ team.key }}"/>
-    <input type="submit" value="Vote for this!"/>
-  </form>
 {% endfor %}
 
 {% endblock %}

@@ -1,0 +1,185 @@
+body {
+  font-family: Arial, Helvetica, Geneva, sans-serif;
+  font-size: 13px;
+  color: #5A5858;;
+  padding: 20px;
+  margin: 0;
+  background-color: #efefef;
+  vertical-align: baseline;
+}
+
+.venuetop {
+	height: 110px;
+	margin-bottom: 10px;
+}
+
+.venuephoto {
+  float: left;
+  padding-right: 10px;
+}
+
+.venuename {
+  font-size: 32px
+}
+
+.oneperson {
+  float: left;
+  margin: 0 10px 10px 0;
+}
+
+.oneperson img {
+  padding: 1px;
+  background-color: white;
+}
+
+#tweets {
+  float: right;
+  width: 300px;
+}
+
+.tweet {
+  margin-bottom: 10px;
+}
+
+.author {
+  font-size: 10px;
+}
+
+.formlabel {
+  font-size: 10px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom:5px;
+}
+
+
+.content {
+  width:555px;
+  background-color:#FFFFFF;
+  line-height: 18px;
+
+  
+}
+
+.hackName {
+  font-size: 20px;
+  color: #555;
+  line-height: 20px;
+  font-weight:bold;
+  margin-bottom:5px;
+}
+
+.entryDetail img {
+  margin-right:5px;
+  margin-top:5px;
+  margin-bottom:5px;
+  margin: 10px;
+  height: 240px;
+  margin:10px; 
+  height:400px; 
+  float:left; 
+  width: 300px; 
+  background-color:#ffffff;  line-height: 18px;
+  
+}
+
+
+a {
+  color:#2398C9;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+a:hover {
+  color:#5A5858;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.photo {
+  display:block;
+}
+
+/* cute little bolded meta data, if I end up using it */
+.location {
+  font-size: 10px;
+  font-weight: bold;
+  margin-top: 10px;
+  text-transform: uppercase;
+  
+}
+
+
+.entryDetail {
+  border-bottom: 1px solid #DDD;
+  border-top: 1px solid white;
+  display: block;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right:10px;
+  min-height: 200px;
+  padding-top: 10px;
+  
+}
+
+/*
+.entryText {
+  float:left;
+  width:300px;
+}
+
+.entryImg {
+  float:right;
+  width:100px;
+} */
+
+.description {
+  display:block;  
+}
+
+
+.venuetop {
+  height: 110px;
+  margin-bottom: 10px;
+}
+
+.venuephoto {
+  float: left;
+  padding-right: 10px;
+}
+
+.venuename {
+  font-size: 32px
+}
+
+.oneperson {
+  float: left;
+  margin: 0 10px 10px 0;
+}
+
+.oneperson img {
+  padding: 1px;
+  background-color: white;
+}
+
+#tweets {
+  float: right;
+  width: 300px;
+}
+
+.tweet {
+  margin-bottom: 10px;
+}
+
+.authors {
+  color: #999;
+  font-family: Arial, Helvetica, Geneva, sans-serif;
+  font-size: 13px;
+  color: #5A5858;;
+}
+
+.formlabel {
+  font-size: 10px;
+  font-weight: bold;
+  margin-top: 10px;
+}
