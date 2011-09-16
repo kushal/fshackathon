@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>Submit your project!</h1>
+<div style="clear:both;">
+	<h1>Submit your project!</h1>
+</div>
 
 <div class="content">
   <div class="entryDetail">
@@ -13,6 +15,9 @@
 
 	<div class="formlabel">TEAM MEMBERS</div>
 	<input type="text" name="people" size="80"/>
+
+	<div class="formlabel">WEBSITE URL</div>
+	<input type="text" name="url" size="80"/>
 
 	<div class="formlabel">LOCATION</div>
 	<select name="location">
@@ -29,14 +34,15 @@
 	<div class="formlabel">DESCRIPTION (500 characters or less)</div>
 	<textarea size="80" cols=58 rows=4 name="description"></textarea>
 
-	<div class="formlabel">WEBSITE URL</div>
-	<input type="text" name="url" size="80"/>
-
 	<div class="formlabel">VIDEO URL</div>
 	<input type="text" name="video" size="80"/>
 
 	<div class="formlabel">SCREENSHOT URL (Dimensions: 275 x 150)</div>
 	<input type="text" name="screenshot" size="80"/>
+
+	<div class="formlabel">EMAIL</div>
+	<input type="text" name="email" size="80"/>
+
 	<br/><br/>
 	<input type="SUBMIT"/>
 	</form><br/><br/>

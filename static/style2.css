@@ -8,38 +8,11 @@ body {
   vertical-align: baseline;
 }
 
-.venuetop {
-	height: 110px;
-	margin-bottom: 10px;
+.h1 {
+  display:inline;
 }
 
-.venuephoto {
-  float: left;
-  padding-right: 10px;
-}
 
-.venuename {
-  font-size: 32px
-}
-
-.oneperson {
-  float: left;
-  margin: 0 10px 10px 0;
-}
-
-.oneperson img {
-  padding: 1px;
-  background-color: white;
-}
-
-#tweets {
-  float: right;
-  width: 300px;
-}
-
-.tweet {
-  margin-bottom: 10px;
-}
 
 .author {
   font-size: 10px;
@@ -57,8 +30,6 @@ body {
   width:555px;
   background-color:#FFFFFF;
   line-height: 18px;
-
-  
 }
 
 .hackName {
@@ -69,25 +40,25 @@ body {
   margin-bottom:5px;
 }
 
-.entryDetail img {
-  margin-right:5px;
-  margin-top:5px;
-  margin-bottom:5px;
-  margin: 10px;
-  height: 240px;
-  margin:10px; 
-  height:400px; 
-  float:left; 
-  width: 300px; 
-  background-color:#ffffff;  line-height: 18px;
-  
+.footer {
+  margin-left:15px;
 }
 
+
+.entryDetail img {
+  margin-right:5px;
+  background-color:#ffffff;
+  line-height: 18px;
+
+  
+}
 
 a {
   color:#2398C9;
   text-decoration:none;
   font-weight:bold;
+  line-height: 18px;
+
 }
 
 a:hover {
@@ -98,6 +69,10 @@ a:hover {
 
 .photo {
   display:block;
+}
+
+.vote {
+  margin-top:10px;
 }
 
 /* cute little bolded meta data, if I end up using it */
@@ -117,8 +92,13 @@ a:hover {
   padding-bottom: 10px;
   padding-left: 10px;
   padding-right:10px;
-  min-height: 200px;
+  min-height: 300px;
   padding-top: 10px;
+  margin:7px;
+  float:left;
+  background-color:#ffffff;
+  line-height: 18px;
+
   
 }
 
@@ -171,7 +151,7 @@ a:hover {
   margin-bottom: 10px;
 }
 
-.authors {
+.authors, .description {
   color: #999;
   font-family: Arial, Helvetica, Geneva, sans-serif;
   font-size: 13px;

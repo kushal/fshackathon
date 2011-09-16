@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>Teams</h1>
-
-<a href="add">Add a team</a>
+<div style="clear:both;">
+  <h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add a team</a>
+</div>
 
 <div class="content">
 
+
   {% for team in teams %}
-    <div class="entryDetail" style="margin:10px; height:500px; float:left; width: 300px; background-color:#ffffff; line-height: 18px;">
+    <div class="entryDetail" style="height:530px;width: 300px;">
 
          <h2 class="hackName">{{ team.name|escape }}</h2>
 
@@ -20,14 +21,18 @@
           {{ team.description|escape }}
           </div>
 
-        {% if team.url %}  {{ team.url|urlize }}{% endif %} <br/>
-        {% if team.video %}{{ team.video|urlize }}{% endif %} <br/>
-        {% if team.screenshot %}<img style="max-width:275px; max-height:150px;" src="{{ team.screenshot }}">{% endif %}
+        {% if team.url %} <img src="static/images/ico_download.png" style="width:20px;height:20px;">  {{ team.url|urlize }}<br/>{% endif %} 
 
+        {% if team.video %}  <img src="static/images/ico_download.png" style="width:20px;height:20px;"> {{ team.video|urlize }}<br/>{% endif %} <br/>
+
+        {% if team.screenshot %}<img  class="testImg" style="width:275px; height:150px;" src="{{ team.screenshot }}">{% endif %} <br/>
+
+        <div class="vote">
         <form action="vote" method="POST">
             <input type="hidden" name="vote" value="{{ team.key }}"/>
-            <input type="submit" value="WANT"/>
+            <input type="image" src="static/images/btn_want.png" value="WANT"/>
         </form>
+        </div>
     </div>
 
 
