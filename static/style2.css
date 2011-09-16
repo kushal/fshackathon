@@ -1,7 +1,7 @@
 body {
   font-family: Arial, Helvetica, Geneva, sans-serif;
   font-size: 13px;
-  color: #5A5858;;
+  color: #5A5858;
   padding: 20px;
   margin: 0;
   background-color: #efefef;
@@ -10,6 +10,12 @@ body {
 
 .h1 {
   display:inline;
+}
+
+.text {
+    font-family: Arial, Helvetica, Geneva, sans-serif;
+  font-size: 13px;
+  color: #5A5858;
 }
 
 
@@ -119,8 +125,12 @@ a:hover {
 
 
 .venuetop {
-  height: 110px;
+  width: 600px;
   margin-bottom: 10px;
+  margin-right:5px;
+  background-color:#ffffff;
+  line-height: 18px;
+
 }
 
 .venuephoto {
@@ -145,10 +155,23 @@ a:hover {
 #tweets {
   float: right;
   width: 300px;
+  background-color:#ffffff;
+  line-height: 18px;
+  margin:20px;
+
+   font-family: Arial, Helvetica, Geneva, sans-serif;
+  font-size: 13px;
+  color: #5A5858;;
 }
 
 .tweet {
   margin-bottom: 10px;
+  margin:20px;
+}
+
+.venue {
+  margin-bottom: 10px;
+  margin:20px;
 }
 
 .authors, .description {

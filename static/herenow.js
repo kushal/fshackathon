@@ -6,24 +6,25 @@ var venues = ['4ab7e57cf964a5205f7b20e3', '4de0117c45dd3eae8764d6ac'];
  */
 function buildVenueDivs() {
 	for (var i = 0; i < venues.length; i++) {
-  	var div = $('<div class=venue><div class=venuetop id="venue-' + venues[i] + '"></div><div id="herenow-' + venues[i] + '"></div></div>');
+  	var div = $('<div class="venuetop" style="margin-top:20px; width:1000px; padding:10px;"><div id="venue-' + venues[i] + '"></div><div id="herenow-' + venues[i] + '"></div><br clear="left"></div>');
   	$('#venues').append(div);
-  	$('#venues').append($('<br clear="left"/><br/>'));
+  	$('#venues').append($('<br/><br/><br/>'));
 	}
 }
 
-function fetchVenueMetadata(vid) {
-  makeRequest('venues/' + vid, function(response) {
+function fetchVenueMetadata(venueId) {
+  makeRequest('venues/' + venueId, function(response) {    
     var venue = response.response.venue;
-    var photo = null;
+    var photo = '';
     var photoGroupIndex = 0;
-    while (photo == null && photoGroupIndex < venue.photos.groups.length) {
+    while (photo == '' && photoGroupIndex < venue.photos.groups.length) {
       var group = venue.photos.groups[photoGroupIndex];
       if (group.count > 0) {
         photo = '<img height=100 src="' + group.items[0].sizes.items[2].url + '">'; 
       }
+      photoGroupIndex++;
     }
-    $('#venue-' + vid).html('<div class="venuephoto">' + photo + '</div><div class="venuename">' + venue.name + '</div><div class="count">' + venue.hereNow.count + ' people here now</div>');
+    $('#venue-' + venueId).html('<div class="venuephoto">' + photo + '</div><div class="venuename">' + venue.name + '</div><div class="count">' + venue.hereNow.count + ' people here now</div>');
   });  
 }
 
@@ -36,12 +37,13 @@ function fetchVenueHereNow(vid) {
       herenow[i]['user']['photo'] + 
       '"></div>');
     }
+    html.push('<br clear="left"/>');
     $('#herenow-' + vid).html(html.join(''));
   });  
 }
 
 function fetchSearch() {
-  $.getJSON('http://search.twitter.com/search.json?q=foursquare&result_type=mixed&count=5&callback=?', {}, function(result) {
+  $.getJSON('http://search.twitter.com/search.json?q=4sqhackathon&result_type=mixed&count=5&callback=?', {}, function(result) {
     var results = result.results;
     var html = [];
     for (var i = 0; i < results.length; i++) {
