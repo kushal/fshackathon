@@ -25,7 +25,7 @@
 
         {% if team.video %}  <img src="static/images/ico_video.png" style="width:20px;height:20px;"> {{ team.video|urlize }}<br/>{% endif %} <br/>
 
-        {% if team.screenshot %}<img  class="testImg" style="width:275px; height:150px;" src="{{ team.screenshot }}"> <br/>{% endif %}
+        {% if team.image %}<img  class="testImg" style="width:275px; height:150px;" src="{{ team.image }}"> <br/>{% endif %}
 
         <div class="vote">
 	    <form action="vote" method="POST">
@@ -33,16 +33,16 @@
 	    <input type="hidden" name="local" value="1"/>
         {% if team.voted %}
 	    	<input type="hidden" name="undo" value="1"/>
-	    	WANTED! <input type="submit" value="scratch that"/>
+	    	<div class="hackName">WANTED! <input type="submit" value="scratch that"/></div>
 		{% else %}       
-            <input type="image" src="static/images/btn_want.png" value="WANT"/>
+            <input type="image" style="font-size:15px;" src="static/images/btn_want.png" value="WANT"/>
 		{% endif %}
         </form>
         </div>
     </div>
 
 
-</div> <br/>
+</div> 
 
 
   

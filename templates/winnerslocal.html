@@ -8,15 +8,18 @@
 <div class="content" style="padding: 10px">
 
 {% for team in teams %}
-  <h2>{{ team.name }}</h2>
+  <h2 class="hackName">{{ team.name }}</h2>
 
-  {{ team.location }}
+  <span class="location">{{ team.location }}</span>
   <br/>
-  {{ team.people }}
+  <div class="authors">{{ team.people }}</div>
   <br/>
-  {{ team.description }}
+  <div class="description">{{ team.description }}</div>
   <br/>
   <b>{{ team.local_votes }}</b> local votes
+
+  <hr style="background-color:#efefef;border:0;height:5px;width:550px;">
+  
 {% endfor %}
 
 </div>
