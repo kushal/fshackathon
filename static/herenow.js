@@ -1,12 +1,12 @@
 var CLIENT_ID = 'EPMLCP1Y1MS1U1F3QRQAGZQSLNSGGLD5T5K3OTZUB1CMSKEB';
-var venues = ['42944', '105847', '174205', '200239', '326376', '394641', '409767', '645081', '750627', '806693', '877439', '919677', '1929512', '2209457', '2323058', '4923749', '6321969', '7130503', '17107148', '19497903', '23176411', '23824377', '23930833', '1488562, 18483013', '4b07f908f964a520c70123e3', '4b4ca0ddf964a52017b826e3', '4bcf6411462cb713759ed607', '4bf6f7be13aed13a308ceaf7', '4c8a35721eafb1f780017835', '4d22de726e8c370414900fa0', '4de0117c45dd3eae8764d6ac', '436964'];
+var venues = ['4de0117c45dd3eae8764d6ac','4c8a35721eafb1f780017835','4b4ca0ddf964a52017b826e3','750627','7130503'];
 
 /**
  * For each venue above, build a div for who's there.
  */
 function buildVenueDivs() {
   for (var i = 0; i < venues.length; i++) {
-    var div = $('<div class="venuetop" style="margin-top:20px; margin-left:10px; width:720px; padding:10px;"><div id="venue-' + venues[i] + '"></div><div id="herenow-' + venues[i] + '"></div><br clear="left"></div>');
+    var div = $('<div class="venuetop" style="margin-top:20px; margin-left:10px; width:300px; padding:10px;"><div id="venue-' + venues[i] + '"></div><div id="herenow-' + venues[i] + '"></div><br clear="left"></div>');
     $('#venues').append(div);
     $('#venues').append($('<br/><br/><br/>'));
   }
@@ -20,7 +20,7 @@ function fetchVenueMetadata(venueId) {
     while (photo == '' && photoGroupIndex < venue.photos.groups.length) {
       var group = venue.photos.groups[photoGroupIndex];
       if (group.count > 0) {
-        photo = '<img height=100 src="' + group.items[0].sizes.items[2].url + '">'; 
+        photo = '<img height=62 src="' + group.items[0].sizes.items[2].url + '">'; 
       }
       photoGroupIndex++;
     }
@@ -33,7 +33,7 @@ function fetchVenueHereNow(vid) {
     var herenow = response.response.hereNow.items;
     var html = [];
     for (var i = 0; i < herenow.length; i++) {
-      html.push('<div class="oneperson"><img width=50 src="' +
+      html.push('<div class="oneperson"><img width=30 src="' +
       herenow[i]['user']['photo'] + 
       '"></div>');
     }
@@ -43,7 +43,7 @@ function fetchVenueHereNow(vid) {
 }
 
 function fetchSearch() {
-  $.getJSON('http://search.twitter.com/search.json?q=4sqhackathon&result_type=mixed&count=5&callback=?', {}, function(result) {
+  $.getJSON('http://search.twitter.com/search.json?q=4sqhackathon&result_type=recent&count=5&callback=?&rpp=3&page=1', {}, function(result) {
     var results = result.results;
     var html = [];
     for (var i = 0; i < results.length; i++) {
