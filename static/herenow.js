@@ -1,15 +1,15 @@
 var CLIENT_ID = 'EPMLCP1Y1MS1U1F3QRQAGZQSLNSGGLD5T5K3OTZUB1CMSKEB';
-var venues = ['4ab7e57cf964a5205f7b20e3', '4de0117c45dd3eae8764d6ac'];
+var venues = ['42944', '105847', '174205', '200239', '326376', '394641', '409767', '645081', '750627', '806693', '877439', '919677', '1929512', '2209457', '2323058', '4923749', '6321969', '7130503', '17107148', '19497903', '23176411', '23824377', '23930833', '1488562, 18483013', '4b07f908f964a520c70123e3', '4b4ca0ddf964a52017b826e3', '4bcf6411462cb713759ed607', '4bf6f7be13aed13a308ceaf7', '4c8a35721eafb1f780017835', '4d22de726e8c370414900fa0', '4de0117c45dd3eae8764d6ac', '436964'];
 
 /**
  * For each venue above, build a div for who's there.
  */
 function buildVenueDivs() {
-	for (var i = 0; i < venues.length; i++) {
-  	var div = $('<div class="venuetop" style="margin-top:20px; width:1000px; padding:10px;"><div id="venue-' + venues[i] + '"></div><div id="herenow-' + venues[i] + '"></div><br clear="left"></div>');
-  	$('#venues').append(div);
-  	$('#venues').append($('<br/><br/><br/>'));
-	}
+  for (var i = 0; i < venues.length; i++) {
+    var div = $('<div class="venuetop" style="margin-top:20px; margin-left:10px; width:720px; padding:10px;"><div id="venue-' + venues[i] + '"></div><div id="herenow-' + venues[i] + '"></div><br clear="left"></div>');
+    $('#venues').append(div);
+    $('#venues').append($('<br/><br/><br/>'));
+  }
 }
 
 function fetchVenueMetadata(venueId) {
