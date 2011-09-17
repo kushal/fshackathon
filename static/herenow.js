@@ -2,7 +2,8 @@ var CLIENT_ID = 'EPMLCP1Y1MS1U1F3QRQAGZQSLNSGGLD5T5K3OTZUB1CMSKEB';
 if (window.location.host == 'localhost:8000') {
   CLIENT_ID = 'QADWWPJPWQEJCBQT3BZ0KHZVDZED2VDHZWI23ZW45PA00OXF';
 }
-var venues = ['42944', '105847', '174205', '200239', '326376', '394641', '409767', '645081', '750627', '806693', '877439', '919677', '1929512', '2209457', '2323058', '4923749', '6321969', '7130503', '17107148', '19497903', '23176411', '23824377', '23930833', '1488562, 18483013', '4b07f908f964a520c70123e3', '4b4ca0ddf964a52017b826e3', '4bcf6411462cb713759ed607', '4bf6f7be13aed13a308ceaf7', '4c8a35721eafb1f780017835', '4d22de726e8c370414900fa0', '4de0117c45dd3eae8764d6ac', '436964'];
+//19497903
+var venues = ['42944', '105847', '174205', '200239', '326376', '394641', '409767', '645081', '750627', '806693', '877439', '919677', '1929512', '2209457', '2323058', '4923749', '6321969', '7130503', '17107148', '23176411', '23824377', '23930833', '1488562', '18483013', '4b07f908f964a520c70123e3', '4b4ca0ddf964a52017b826e3', '4bcf6411462cb713759ed607', '4bf6f7be13aed13a308ceaf7', '4c8a35721eafb1f780017835', '4d22de726e8c370414900fa0', '4de0117c45dd3eae8764d6ac', '436964'];
 //var venues = ['4de0117c45dd3eae8764d6ac','4c8a35721eafb1f780017835','4b4ca0ddf964a52017b826e3','750627','7130503'];
 
 /**
@@ -28,7 +29,12 @@ function fetchVenueMetadata(venueId) {
       }
       photoGroupIndex++;
     }
-    $('#venue-' + venueId).html('<div class="venuephoto">' + photo + '</div><div class="venuename">' + venue.name + '</div><div class="count">' + venue.hereNow.count + ' people here now</div>');
+    var location = venue.location.city || '';
+    if (location) {
+      location = location + ', ';
+    }
+    $('#venue-' + venueId).html('<div class="venuephoto">' + photo + '</div><div class="venuename">' + venue.name + '</div><div class="count">' + location + venue.hereNow.count + ' people here now</div>');
+    $('#venue-' + venueId).parent().toggle(venue.hereNow.count > 0);
   });  
 }
 
@@ -72,14 +78,14 @@ function update() {
     fetchVenueMetadata(venues[i]);
     fetchVenueHereNow(venues[i]);
   }
-  fetchSearch();
 }
 
 function init() {
   buildVenueDivs();
   update();
-  setInterval(update, 60000)
-  setInterval(rotateVenueDivs, 10000)
+  setInterval(update, 60 * 1000 * 3);
+  setInterval(fetchSearch, 30000);
+  setInterval(rotateVenueDivs, 10000);
 }
 
 var token = null;
