@@ -23,6 +23,10 @@ class Team(db.Model):
     if len(results):
         return results[0]
     return None
+  
+  @staticmethod
+  def for_city(city):
+    return Team.all().filter('location =', city).fetch(1000)
 
 
 class Votes(db.Model):

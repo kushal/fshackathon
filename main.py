@@ -2,6 +2,7 @@
 
 import cgi
 import logging
+from operator import attrgetter
 import os
 import urllib2
 
@@ -25,11 +26,35 @@ def fetchJson(url):
   except urllib2.URLError, e :
     logging.error(e)
 
+
 class BaseHandler(webapp.RequestHandler):
-    def render(self, template_name, template_values):
-        path = os.path.join(os.path.dirname(__file__), 'templates/%s.html' % template_name)
-        self.response.out.write(template.render(path, template_values))
-            
+  def render(self, template_name, template_values):
+      path = os.path.join(os.path.dirname(__file__), 'templates/%s.html' % template_name)
+      self.response.out.write(template.render(path, template_values))
+
+  def get_user_city(self, votes):
+    if votes.token is None:
+        client_id = 'EPMLCP1Y1MS1U1F3QRQAGZQSLNSGGLD5T5K3OTZUB1CMSKEB'
+        redirect_uri = 'http://fshackathon.appspot.com/auth'
+        if (self.request.url.find('localhost') > -1):
+            client_id = 'QADWWPJPWQEJCBQT3BZ0KHZVDZED2VDHZWI23ZW45PA00OXF'
+            redirect_uri = 'http://localhost:8000/auth'
+        self.redirect('https://foursquare.com/oauth2/authenticate?client_id=%s&response_type=code&redirect_uri=%s' %
+                      (client_id, redirect_uri), False)
+        return
+    user = fetchJson('https://api.foursquare.com/v2/users/self?oauth_token=%s' % votes.token)
+    venue = user['response']['user']['checkins']['items'][0]['venue']['id']
+      # TODO: Check here now as cheater protection
+
+    venue_to_city = {
+                     '4de0117c45dd3eae8764d6ac': 'San Francisco',
+                     '4c5c076c7735c9b6af0e8b72': 'New York',
+                     '4b5d0df8f964a5209e5029e3': 'Tokyo',
+                     '4c8a35721eafb1f780017835': 'Paris'
+                 }
+    return venue_to_city.get(venue)
+
+
 class ReceiveVote(BaseHandler):
   # TODO: unvoting, local
   def post(self):
@@ -68,6 +93,17 @@ class Winners(BaseHandler):
     all_teams = Team.all().fetch(1000)
     self.render('winners', { 'teams': all_teams })
 
+class WinnersLocal(BaseHandler):
+  def get(self):
+    votes = Votes.for_user(users.get_current_user())
+    city = self.get_user_city(votes)
+    if city is None:
+        self.render('listlocal_fail', {  })
+    else:
+      all_teams = Team.for_city(city)
+      all_teams.sort(key=attrgetter('local_votes'))
+      self.render('winnerslocal', { 'teams': all_teams, 'city': city })
+
 class ListProjects(BaseHandler): 
   def get(self):  
     votes = Votes.for_user(users.get_current_user())
@@ -76,33 +112,13 @@ class ListProjects(BaseHandler):
 
 class ListProjectsLocal(BaseHandler): 
   def get(self):
-    # TODO: Random order?  
     votes = Votes.for_user(users.get_current_user())
-    if votes.token is None:
-        client_id = 'EPMLCP1Y1MS1U1F3QRQAGZQSLNSGGLD5T5K3OTZUB1CMSKEB'
-        redirect_uri = 'http://fshackathon.appspot.com/auth'
-        if (self.request.url.find('localhost') > -1):
-            client_id = 'QADWWPJPWQEJCBQT3BZ0KHZVDZED2VDHZWI23ZW45PA00OXF'
-            redirect_uri = 'http://localhost:8000/auth'
-        self.redirect('https://foursquare.com/oauth2/authenticate?client_id=%s&response_type=code&redirect_uri=%s' %
-                      (client_id, redirect_uri), False)
-        return
-    user = fetchJson('https://api.foursquare.com/v2/users/self?oauth_token=%s' % votes.token)
-    venue = user['response']['user']['checkins']['items'][0]['venue']['id']
-
-    # TODO: Check here now as cheater protection
-
-    venue_to_city = {
-                     '4de0117c45dd3eae8764d6ac': 'San Francisco',
-                     '4c5c076c7735c9b6af0e8b72': 'New York',
-                     '4b5d0df8f964a5209e5029e3': 'Tokyo',
-                     '4c8a35721eafb1f780017835': 'Paris'
-                 }
-    city = venue_to_city.get(venue)
+    city = self.get_user_city(votes)
     if city is None:
         self.render('listlocal_fail', {  })
     else:
-        all_teams = Team.all().filter('location =', city).fetch(1000)
+        all_teams = Team.for_city(city)
+        votes = Votes.for_user(users.get_current_user())
         for team in all_teams:
             team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
         self.render('listlocal', { 'city': city, 'teams': all_teams })
@@ -141,7 +157,8 @@ application = webapp.WSGIApplication([('/', ListProjects),
                                       ('/auth', ReceiveAuth),
                                       ('/add', ProjectForm),
                                       ('/doadd', AddProject),
-                                      ('/winners', Winners)],
+                                      ('/winners', Winners),
+                                      ('/winnerslocal', WinnersLocal)],
                                      debug=True)
 
 def main():

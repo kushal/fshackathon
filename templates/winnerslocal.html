@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div style="clear:both;">
+  <h1 style="margin:0px;padding:0px;">Votes in {{ city }}</h1>
+</div>
+
+<div class="content" style="padding: 10px">
+
+{% for team in teams %}
+  <h2>{{ team.name }}</h2>
+
+  {{ team.location }}
+  <br/>
+  {{ team.people }}
+  <br/>
+  {{ team.description }}
+  <br/>
+  <b>{{ team.local_votes }}</b> local votes
+{% endfor %}
+
+</div>
+
+{% endblock %}
