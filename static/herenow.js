@@ -43,7 +43,7 @@ function fetchVenueHereNow(vid) {
 }
 
 function fetchSearch() {
-  $.getJSON('http://search.twitter.com/search.json?q=4sqhackathon&result_type=recent&count=5&callback=?&rpp=3&page=1', {}, function(result) {
+  $.getJSON('http://search.twitter.com/search.json?q=4sqhackathon&result_type=recent&count=5&callback=?&rpp=6&page=1', {}, function(result) {
     var results = result.results;
     var html = [];
     for (var i = 0; i < results.length; i++) {
