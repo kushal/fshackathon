@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div style="clear:both;">
+  <h1 style="margin:0px;padding:0px;">Teams in {{ city }}</h1><br/><br/>
+</div>
+
+<div class="content">
+
+
+  {% for team in teams %}
+    <div class="entryDetail" style="height:530px;width: 300px;">
+
+         <h2 class="hackName">{{ team.name|escape }}</h2>
+
+          <div class="authors">{{ team.people|escape }}<br/>
+          <span class="location">in {{ team.location|escape }}</span>
+          <br/></div><br/>
+
+          <div class="description" style="text-overflow: ellipsis;">
+          {{ team.description|escape }}
+          </div>
+
+        {% if team.url %} <img src="static/images/ico_download.png" style="width:20px;height:20px;">  {{ team.url|urlize }}<br/>{% endif %} 
+
+        {% if team.video %}  <img src="static/images/ico_video.png" style="width:20px;height:20px;"> {{ team.video|urlize }}<br/>{% endif %} <br/>
+
+        {% if team.screenshot %}<img  class="testImg" style="width:275px; height:150px;" src="{{ team.screenshot }}"> <br/>{% endif %}
+
+        <div class="vote">
+	    <form action="vote" method="POST">
+	    <input type="hidden" name="team_key" value="{{ team.key }}"/>
+	    <input type="hidden" name="local" value="1"/>
+        {% if team.voted %}
+	    	<input type="hidden" name="undo" value="1"/>
+	    	WANTED! <input type="submit" value="scratch that"/>
+		{% else %}       
+            <input type="image" src="static/images/btn_want.png" value="WANT"/>
+		{% endif %}
+        </form>
+        </div>
+    </div>
+
+
+</div> <br/>
+
+
+  
+{% endfor %}
+
+{% endblock %}

@@ -10,14 +10,14 @@
 
 	<form method="POST" action="doadd">
 
-	<div class="formlabel">NAME</div>
-	<input type="text" name="name" size="80"/>
+	<div class="formlabel">TEAM NAME</div>
+	<input type="text" name="name" size="80" value="{{ existing.name }}"/>
 
 	<div class="formlabel">TEAM MEMBERS</div>
-	<input type="text" name="people" size="80"/>
+	<input type="text" name="people" size="80" value="{{ existing.people }}"/>
 
 	<div class="formlabel">WEBSITE URL</div>
-	<input type="text" name="url" size="80"/>
+	<input type="text" name="url" size="80" value="{{ existing.url }}"/>
 
 	<div class="formlabel">LOCATION</div>
 	<select name="location">
@@ -29,19 +29,22 @@
 	</select>
 
 	<div class="formlabel">YOUR LOCATION, IF NOT LISTED</div>
-	<input type="text" name="otherLocation" size="80"/>
+	<input type="text" name="otherLocation" size="80" value="{{ existing.email }}"/>
 
 	<div class="formlabel">DESCRIPTION (500 characters or less)</div>
-	<textarea size="80" cols=58 rows=4 name="description"></textarea>
+	<textarea size="80" cols=58 rows=4 name="description">{{ existing.description }}</textarea>
 
 	<div class="formlabel">VIDEO URL</div>
-	<input type="text" name="video" size="80"/>
+	<input type="text" name="video" size="80" value="{{ existing.video }}"/>
 
-	<div class="formlabel">SCREENSHOT URL (Dimensions: 275 x 150)</div>
-	<input type="text" name="screenshot" size="80"/>
+	<div class="formlabel">IMAGE URL (Dimensions: 275 x 150)</div>
+	<input type="text" name="image" size="80" value="{{ existing.image }}"/>
 
-	<div class="formlabel">EMAIL</div>
-	<input type="text" name="email" size="80"/>
+	<div class="formlabel">EMAIL (will not be displayed)</div>
+	<input type="text" name="email" size="80" value="{{ existing.email }}"/>
+
+	<div class="formlabel">MAILING ADDRESS AND T-SHIRT SIZES (in case you win!)</div>
+	<textarea size="80" cols=58 rows=4 name="winner">{{ existing.winner }}</textarea>
 
 	<br/><br/>
 	<input type="SUBMIT"/>

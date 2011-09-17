@@ -7,30 +7,62 @@ import urllib2
 
 from django.utils import simplejson
 
+from google.appengine.api import urlfetch
 from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from model import Team, Vote, increment_vote
+from model import Team, Votes, vote, unvote
+
+def fetchJson(url):
+  logging.info('fetching url: ' + url)
+  try :
+    result = urllib2.urlopen(url).read()
+    logging.info('got back: ' + result)
+    return simplejson.loads(result)
+  except urllib2.URLError, e :
+    logging.error(e)
 
 class BaseHandler(webapp.RequestHandler):
     def render(self, template_name, template_values):
-        #self.response.headers['Content-Type'] = 'text/html'
         path = os.path.join(os.path.dirname(__file__), 'templates/%s.html' % template_name)
         self.response.out.write(template.render(path, template_values))
-        
             
 class ReceiveVote(BaseHandler):
+  # TODO: unvoting, local
   def post(self):
-    vote = self.request.get('vote')
-    increment_vote(users.get_current_user(), vote)
+    team_key = self.request.get('team_key')
+    undo = self.request.get('undo')
+    if undo == '1':
+        unvote(users.get_current_user(), team_key)
+    else:
+        is_local = self.request.get('local')
+        # TODO: Verify local
+        vote(users.get_current_user(), team_key, is_local)
     self.render('vote_received', {})
 
 
+class ReceiveAuth(BaseHandler):
+  def get(self):
+    code = self.request.get('code')
+    client_id = 'EPMLCP1Y1MS1U1F3QRQAGZQSLNSGGLD5T5K3OTZUB1CMSKEB'
+    client_secret = 'EZYSGRHUEGLRULLLGEYZKSVN1PV0RKWQJL3JL2D5QWQV0XWJ'
+    redirect_uri = 'http://fshackathon.appspot.com/auth'
+    if (self.request.url.find('localhost') > -1):
+        client_id = 'QADWWPJPWQEJCBQT3BZ0KHZVDZED2VDHZWI23ZW45PA00OXF'
+        client_secret = 'EIP4CULDABQQRZCL0AKNJYISGRMD43O4XE4QC2LO1OVCFGL5'
+        redirect_uri = 'http://localhost:8000/auth'
+    result = fetchJson('https://foursquare.com/oauth2/access_token?client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s&code=%s' %
+                       (client_id, client_secret, redirect_uri, code))
+    token = result['access_token']
+    votes = Votes.for_user(users.get_current_user())
+    votes.token = token
+    votes.put()
+    self.redirect('listlocal', False)
+
 class Winners(BaseHandler):
-  """Fetches totals"""
   def get(self):
     #TODO(kushal): Support location filter
     all_teams = Team.all().fetch(1000)
@@ -38,32 +70,75 @@ class Winners(BaseHandler):
 
 class ListProjects(BaseHandler): 
   def get(self):  
-    #TODO(kushal): Support location filter
+    votes = Votes.for_user(users.get_current_user())
     all_teams = Team.all().fetch(1000)
-    self.render('vote', { 'teams': all_teams })
+    self.render('list', { 'teams': all_teams, 'votes': votes })
+
+class ListProjectsLocal(BaseHandler): 
+  def get(self):
+    # TODO: Random order?  
+    votes = Votes.for_user(users.get_current_user())
+    if votes.token is None:
+        client_id = 'EPMLCP1Y1MS1U1F3QRQAGZQSLNSGGLD5T5K3OTZUB1CMSKEB'
+        redirect_uri = 'http://fshackathon.appspot.com/auth'
+        if (self.request.url.find('localhost') > -1):
+            client_id = 'QADWWPJPWQEJCBQT3BZ0KHZVDZED2VDHZWI23ZW45PA00OXF'
+            redirect_uri = 'http://localhost:8000/auth'
+        self.redirect('https://foursquare.com/oauth2/authenticate?client_id=%s&response_type=code&redirect_uri=%s' %
+                      (client_id, redirect_uri), False)
+        return
+    user = fetchJson('https://api.foursquare.com/v2/users/self?oauth_token=%s' % votes.token)
+    venue = user['response']['user']['checkins']['items'][0]['venue']['id']
+
+    # TODO: Check here now as cheater protection
+
+    venue_to_city = {
+                     '4de0117c45dd3eae8764d6ac': 'San Francisco',
+                     '4c5c076c7735c9b6af0e8b72': 'New York',
+                     '4b5d0df8f964a5209e5029e3': 'Tokyo',
+                     '4c8a35721eafb1f780017835': 'Paris'
+                 }
+    city = venue_to_city.get(venue)
+    if city is None:
+        self.render('listlocal_fail', {  })
+    else:
+        all_teams = Team.all().filter('location =', city).fetch(1000)
+        for team in all_teams:
+            team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
+        self.render('listlocal', { 'city': city, 'teams': all_teams })
 
 class ProjectForm(BaseHandler):
-  def get(self):  
-    self.render('add', { })
+  def get(self):
+    existing = Team.for_user(users.get_current_user())
+    self.render('add', { 'existing': existing })
 
 class AddProject(BaseHandler):    
-  def post(self):  
-    team = Team()
+  def post(self):
+    team = Team.for_user(users.get_current_user())
+    if not team:
+        team = Team()
     team.name = self.request.get('name')
     team.people = self.request.get('people')
+    location = self.request.get('location')
     team.location = self.request.get('location')
+    if location == 'Other':
+        team.location = self.request.get('otherLocation')
     team.description = self.request.get('description')
     team.url = self.request.get('url')
     team.video = self.request.get('video')
-    team.screenshot = self.request.get('screenshot')
+    team.image = self.request.get('image')
+    team.winner = self.request.get('winner')
+    team.email = self.request.get('email')
     team.votes = 0
     team.hackday = '092011'
-    team.put()
     team.user = users.get_current_user()
+    team.put()
     self.render('add_received', { })
     
 application = webapp.WSGIApplication([('/', ListProjects),
+                                      ('/listlocal', ListProjectsLocal),
                                       ('/vote', ReceiveVote),
+                                      ('/auth', ReceiveAuth),
                                       ('/add', ProjectForm),
                                       ('/doadd', AddProject),
                                       ('/winners', Winners)],
