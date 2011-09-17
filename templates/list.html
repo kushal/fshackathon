@@ -21,11 +21,13 @@
           {{ team.description|escape }}
           </div>
 
-        {% if team.url %} <img src="static/images/ico_download.png" style="width:20px;height:20px;">  {{ team.url|urlize }}<br/>{% endif %} 
+        {% if team.url %} <img src="static/images/ico_download.png" style="width:20px;height:20px;"> {{ team.url|urlize }}<br/>{% endif %} 
 
-        {% if team.video %}  <img src="static/images/ico_video.png" style="width:20px;height:20px;"> {{ team.video|urlize }}<br/>{% endif %} <br/>
+        {% if team.video %}  <img src="static/images/ico_video.png" style="width:20px;height:20px;"> {{ team.video|urlize }} <br/>{% endif %} <br/>
 
-        {% if team.image %}<img  class="testImg" style="width:275px; height:150px;" src="{{ team.image }}"> <br/>{% endif %}
+
+        {% if team.image %}<img style="width:275px; height:150px;" src="{{ team.image }}"> <br/>{% endif %}
+
 
         <!--<div class="vote">
         <form action="vote" method="POST">
@@ -36,7 +38,7 @@
     </div>
 
 
-</div> <br/>
+</div> 
 
 
   
