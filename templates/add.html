@@ -9,15 +9,17 @@
 <script>
 function validateForm() {
   
-  var mandatory = ['name', 'people', 'description', 'email', 'mailing'];
+  var mandatory = ['name', 'description', 'email', 'mailing'];
   for (var i = 0; i < mandatory.length; i++) {
     if ($('#' + mandatory[i]).val() == '') {
       alert('Must provide ' + mandatory[i]);
       return false;
     }
   }
-  var url = $('url').val();
-  var video = $('video').val();
+  var url = $('#url').val();
+  var video = $('#video').val();
+  var description = $('#description').val();
+  var image = $('#image').val()
   
   if (url == '' && video == '') {
     alert('Must provide url or video');
@@ -29,8 +31,18 @@ function validateForm() {
     return false;
   }
 
-  if (video != '' && vode.indexOf('http') != 0) {
-    alert('Must provide valid video url.');
+  if (description.length > 500){
+    alert('Description must be shorter than 500 characters.');
+    return false;
+  }
+  
+  if (video != '' && video.indexOf('http') != 0){
+   	alert('Must provide valid video url.');
+    return false;
+  }
+
+  if (image.indexOf('http') != 0){
+   	alert('Must provide valid image url.');
     return false;
   }
 
@@ -52,7 +64,7 @@ function validateForm() {
 	<div class="formlabel">WEBSITE URL</div>
 	<input id="url" type="text" name="url" size="80" value="{{ existing.url }}"/>
 
-	<div class="formlabel">LOCATION</div>
+	<div id="locationForm" class="formlabel">LOCATION</div>
 	<select name="location">
 	<option>New York</option>
 	<option>San Francisco</option>
@@ -68,10 +80,10 @@ function validateForm() {
 	<textarea id="description" cols=58 rows=4 name="description">{{ existing.description }}</textarea>
 
 	<div class="formlabel">VIDEO URL</div>
-	<input type="text" name="video" size="80" value="{{ existing.video }}"/>
+	<input id="video" type="text" name="video" size="80" value="{{ existing.video }}"/>
 
 	<div class="formlabel">IMAGE URL (Dimensions: 275 x 150)</div>
-	<input type="text" name="image" size="80" value="{{ existing.image }}"/>
+	<input id="image" type="text" name="image" size="80" value="{{ existing.image }}"/>
 
 	<div class="formlabel">EMAIL (will not be displayed)</div>
 	<input id="email" type="text" name="email" size="80" value="{{ existing.email }}"/>
