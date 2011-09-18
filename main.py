@@ -4,6 +4,7 @@ import cgi
 import logging
 from operator import attrgetter
 import os
+import urllib
 import urllib2
 
 from django.utils import simplejson
@@ -80,7 +81,7 @@ class ReceiveAuth(BaseHandler):
         client_secret = 'EIP4CULDABQQRZCL0AKNJYISGRMD43O4XE4QC2LO1OVCFGL5'
         redirect_uri = 'http://localhost:8000/auth'
     result = fetchJson('https://foursquare.com/oauth2/access_token?client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s&code=%s' %
-                       (client_id, client_secret, redirect_uri, code))
+                       (client_id, client_secret, urllib.quote_plus(redirect_uri), code))
     token = result['access_token']
     votes = Votes.for_user(users.get_current_user())
     votes.token = token
