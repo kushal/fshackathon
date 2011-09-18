@@ -11,7 +11,7 @@ class Team(db.Model):
   url = db.StringProperty()
   video = db.StringProperty()
   image = db.StringProperty()
-  winner = db.StringProperty()
+  winner = db.TextProperty()
   votes = db.IntegerProperty(default = 0)
   local_votes = db.IntegerProperty(default = 0)
 
