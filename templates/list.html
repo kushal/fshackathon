@@ -2,7 +2,7 @@
 
 {% block body %}
 <div style="clear:both;">
- <!--h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a>-->Global voting will be open from Monday to Tuesday, and will close the evening of the 20th at 12 PM PST<br/><br/>
+ <!--h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a>-->Global voting will be open from Monday to Thursday, and will close the evening of the 22nd at 11 PM EST.<br/><br/>
 </div>
 
 <div class="content">
@@ -14,7 +14,7 @@
   {% for team in teams %}
     <div class="entryDetail" style="height:600px;width: 300px;">
 
-         <a href="/team?team_key={{ team.key }}"><h2>{{ team.name|escape }}</h2></a>
+         <h2><a href="/team?team_key={{ team.key }}">{{ team.name|escape }}</a></h2>
 
           <div class="authors">{{ team.people|escape }}<br/>
           <span class="location">in {{ team.location|escape }}</span>
@@ -29,7 +29,7 @@
         {% if team.video %}  <img src="static/images/ico_video.png" style="width:20px;height:20px;"> {{ team.video|urlize }} <br/>{% endif %} <br/>
 
 
-        {% if team.image %}<img style="width:275px; height:150px;" src="{{ team.image }}"> <br/>{% endif %}
+        {% if team.image %}<img style="max-width:275px; max-height:150px;" src="{{ team.image }}"> <br/>{% endif %}
 
 
       <div class="vote">
