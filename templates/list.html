@@ -2,7 +2,7 @@
 
 {% block body %}
 <div style="clear:both;">
-  <h1 style="margin:0px;padding:0px;">Teams</h1> <!--<a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a>-->Hack submissions are now closed and global voting will begin on Monday.<br/><br/>
+  <h1 style="margin:0px;padding:0px;">Teams</h1> <h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a><br/><br/>
 </div>
 
 <div class="content">
@@ -29,13 +29,13 @@
         {% if team.image %}<img style="width:275px; height:150px;" src="{{ team.image }}"> <br/>{% endif %}
 
 
-        <!--<div class="vote">
+        <div class="vote">
         <form action="vote" method="POST">
             <input type="hidden" name="vote" value="{{ team.key }}"/>
             <input type="image" src="static/images/btn_want.png" value="WANT"/>
-        </form>-->
+        </form>
         </div>
-    </div>
+    </div> 
 
 
 </div> 
