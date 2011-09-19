@@ -2,11 +2,14 @@
 
 {% block body %}
 <div style="clear:both;">
- <!--h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a>-->Global voting will begin on Monday.<br/><br/>
+ <!--h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a>-->Global voting will be open from Monday to Tuesday, and will close the evening of the 20th at 12 PM PST.<br/><br/>
 </div>
 
 <div class="content">
-
+  {% if existing %}
+    Help people vote for your project by sending them to http://fshackathon.appspot.com/team?team_key={{ existing.key }}
+    <br/>
+  {% endif %}
 
   {% for team in teams %}
     <div class="entryDetail" style="height:530px;width: 300px;">
