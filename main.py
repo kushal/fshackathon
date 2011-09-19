@@ -4,6 +4,7 @@ import cgi
 import logging
 from operator import attrgetter
 import os
+import random
 import urllib
 import urllib2
 
@@ -92,10 +93,14 @@ class Winners(BaseHandler):
   def get(self):
     #TODO(kushal): Support location filter
     all_teams = Team.all().fetch(1000)
+    for team in all_teams:
+      team.totalvotes = team.votes + team.local_votes
+    all_teams.sort(key=attrgetter('totalvotes'))
     self.render('winners', { 'teams': all_teams })
 
 class WinnersLocal(BaseHandler):
   def get(self):
+    existing = Team.for_user(users.get_current_user())
     votes = Votes.for_user(users.get_current_user())
     city = self.get_user_city(votes)
     if city is None:
@@ -103,12 +108,15 @@ class WinnersLocal(BaseHandler):
     else:
       all_teams = Team.for_city(city)
       all_teams.sort(key=attrgetter('local_votes'))
-      self.render('winnerslocal', { 'teams': all_teams, 'city': city })
+      self.render('winnerslocal', { 'teams': all_teams, 'city': city, 'team': existing })
 
 class ListProjects(BaseHandler): 
   def get(self):  
     votes = Votes.for_user(users.get_current_user())
     all_teams = Team.all().fetch(1000)
+    for team in all_teams:
+      team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
+    random.shuffle(all_teams)
     self.render('list', { 'teams': all_teams, 'votes': votes })
 
 class ListProjectsLocal(BaseHandler): 
@@ -151,6 +159,15 @@ class AddProject(BaseHandler):
     team.user = users.get_current_user()
     team.put()
     self.render('add_received', { })
+
+class TeamPage(BaseHandler):
+  def get(self):
+    team_key = self.request.get('team_key')
+    team = Team.get(team_key)
+    votes = Votes.for_user(users.get_current_user())
+    team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
+    self.render('team', { 'team': team })
+  
     
 application = webapp.WSGIApplication([('/', ListProjects),
                                       ('/listlocal', ListProjectsLocal),
@@ -159,8 +176,9 @@ application = webapp.WSGIApplication([('/', ListProjects),
                                       ('/add', ProjectForm),
                                       ('/doadd', AddProject),
                                       ('/winners', Winners),
-                                      ('/winnerslocal', WinnersLocal)],
-                                     debug=True)
+                                      ('/winnerslocal', WinnersLocal),
+                                      ('/team', TeamPage)],
+                                     debug = True)
 
 def main():
   run_wsgi_app(application)

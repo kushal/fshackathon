@@ -38,13 +38,19 @@ body {
   line-height: 18px;
 }
 
-.hackName {
+h2 {
   font-size: 20px;
-  color: #555;
+  color: #3b3b3b;
   line-height: 20px;
   font-weight:bold;
   margin-bottom:5px;
 }
+
+h2 a:hover{
+  text-decoration:none;
+  color:#000000;
+}
+
 
 .footer {
   margin-left:15px;

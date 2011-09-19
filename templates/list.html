@@ -2,7 +2,7 @@
 
 {% block body %}
 <div style="clear:both;">
- <!--h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a>-->Global voting will be open from Monday to Tuesday, and will close the evening of the 20th at 12 PM PST.<br/><br/>
+ <!--h1 style="margin:0px;padding:0px;">Teams</h1> <a href="add">Add/edit team</a> | <a href="listlocal">Participate in local voting</a>-->Global voting will be open from Monday to Tuesday, and will close the evening of the 20th at 12 PM PST<br/><br/>
 </div>
 
 <div class="content">
@@ -12,9 +12,9 @@
   {% endif %}
 
   {% for team in teams %}
-    <div class="entryDetail" style="height:530px;width: 300px;">
+    <div class="entryDetail" style="height:600px;width: 300px;">
 
-         <h2 class="hackName">{{ team.name|escape }}</h2>
+         <a href="/team?team_key={{ team.key }}"><h2>{{ team.name|escape }}</h2></a>
 
           <div class="authors">{{ team.people|escape }}<br/>
           <span class="location">in {{ team.location|escape }}</span>
@@ -33,19 +33,28 @@
 
 
       <div class="vote">
-      <form action="vote" method="POST">
-      <input type="hidden" name="team_key" value="{{ team.key }}"/>
-        {% if team.voted %}
-        <input type="hidden" name="undo" value="1"/>
-        <div class="hackName">WANTED! <input type="submit" value="scratch that"/></div>
-    {% else %}       
-            <input type="image" style="font-size:15px;" src="static/images/btn_want.png" value="WANT"/>
-    {% endif %}
-        </form>
+        <form action="vote" method="POST">
+        <input type="hidden" name="team_key" value="{{ team.key }}"/>
+          {% if team.voted %}
+            <input type="hidden" name="undo" value="1"/>
+            <div class="hackName">WANTED! <input type="submit" value="scratch that"/></div>
+          {% else %}       
+              <input type="image" style="font-size:15px;" src="static/images/btn_want.png" value="WANT"/>
+          {% endif %}
+          </form>
         </div>
+
+
+    <script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
+      <div>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" 
+            data-url="http://fshackathon.appspot.com/team?team_key={{ team.key }}"
+            data-text="Check out this awesome hack called {{ team.name }} from the #4sqhackathon!"
+            data-related="anywhere:The Javascript API"
+            data-count="vertical">Tweet</a>
+      </div>
+
     </div> 
-
-
 </div> 
 
 
