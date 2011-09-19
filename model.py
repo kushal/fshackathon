@@ -7,7 +7,7 @@ class Team(db.Model):
   hackday = db.StringProperty()
   location = db.StringProperty()
   people = db.StringProperty()
-  description = db.StringProperty()
+  description = db.TextProperty()
   url = db.StringProperty()
   video = db.StringProperty()
   image = db.StringProperty()

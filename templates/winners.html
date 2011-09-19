@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block body %}
+<div style="clear:both;">
 <h1>Teams</h1>
 
 {% for team in teams %}
@@ -12,8 +13,9 @@
   <br/>
   {{ team.description }}
   <br/>
+  {{ team.totalvotes }} total votes
   {{ team.votes }} votes  
   {{ team.local_votes }} local votes
 {% endfor %}
-
+</div>
 {% endblock %}
