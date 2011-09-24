@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import cgi
 import logging
 from operator import attrgetter
 import os
@@ -10,14 +9,14 @@ import urllib2
 
 from django.utils import simplejson
 
-from google.appengine.api import urlfetch
 from google.appengine.api import users
-from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from model import Team, Votes, vote, unvote
+
+config = { 'enable_voting': False }
 
 def fetchJson(url):
   logging.info('fetching url: ' + url)
@@ -117,7 +116,9 @@ class ListProjects(BaseHandler):
     for team in all_teams:
       team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
     random.shuffle(all_teams)
-    self.render('list', { 'teams': all_teams, 'votes': votes })
+    self.render('list', { 'teams': all_teams,
+                          'votes': votes,
+                          'enable_voting': config['enable_voting'] })
 
 class ListProjectsLocal(BaseHandler): 
   def get(self):

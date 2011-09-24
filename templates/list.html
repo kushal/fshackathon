@@ -31,7 +31,7 @@
 
         {% if team.image %}<img style="max-width:275px; max-height:150px;" src="{{ team.image }}"> <br/>{% endif %}
 
-
+      {% if enable_voting %}
       <div class="vote">
         <form action="vote" method="POST">
         <input type="hidden" name="team_key" value="{{ team.key }}"/>
@@ -41,9 +41,9 @@
           {% else %}       
               <input type="image" style="font-size:15px;" src="static/images/btn_want.png" value="WANT"/>
           {% endif %}
-          </form>
-        </div>
-
+        </form>
+      </div>
+      {% endif %}  
 
     <script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
       <div>
