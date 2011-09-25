@@ -146,9 +146,8 @@ class ListProjects(BaseHandler):
       comments = Comment.all()
       for comment in comments:
         team_key = str(comment.team.key())
-        logging.debug("team_key: " + team_key)
+        comment.author_name = comment.user.nickname().split('@', 1)[0]
         if not team_key in team_comments:
-          logging.debug('adding new comment list')
           team_comments[team_key] = []
         if comment.user == current_user:
           user_comments[team_key] = comment
