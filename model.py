@@ -1,5 +1,6 @@
-from google.appengine.ext import db
+import logging
 
+from google.appengine.ext import db
 
 class Team(db.Model):
   user = db.UserProperty()
@@ -40,6 +41,27 @@ class Votes(db.Model):
       votes.user = user
       return votes
 
+
+class Comment(db.Model):
+  user = db.UserProperty()
+  team = db.ReferenceProperty(Team)
+  text = db.TextProperty()
+  @staticmethod
+  def get_comment(user, team):
+    query = db.Query(Comment)
+    query.filter('user =', user).filter('team =', team)
+    result = query.fetch(limit=1)
+    for comment in result:
+      return comment
+    return None
+  @staticmethod
+  def get_team_comments(team):
+    query = db.Query(Comment)
+    return query.filter('team =', team)
+  @staticmethod
+  def get_user_comments(user):
+    query = db.Query(Comment)
+    return query.filter('user =', user)
 
 def update_team(team_key, amount, is_local):
     team = Team.get(team_key)
@@ -82,3 +104,17 @@ def unvote(user, team_key):
         votes.local_teams.remove(team_key_obj)
         db.run_in_transaction(update_team, team_key, -1, True)
         votes.put()
+
+def comment(user, team_key, text):
+  team = Team.get(team_key)
+  if not team:
+    logging.debug('NO TEAM: ' + team_key)
+    return
+  comment = Comment.get_comment(user, team)
+  if comment:
+    comment.text = text
+    comment.put()
+    return
+  comment = Comment(user=user, team=team, text=text)
+  logging.debug('Comment stored: ' + text)
+  comment.put()

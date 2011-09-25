@@ -14,9 +14,12 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from model import Team, Votes, vote, unvote
+from model import Team, Votes, Comment, vote, unvote, comment
 
-config = { 'enable_voting': False }
+config = { 'enable_voting': False,
+           'enable_commenting': False,
+           'list_teams_randomly': True,
+           'admin_domain': 'foursquare.com' }
 
 def fetchJson(url):
   logging.info('fetching url: ' + url)
@@ -26,6 +29,18 @@ def fetchJson(url):
     return simplejson.loads(result)
   except urllib2.URLError, e :
     logging.error(e)
+
+
+def checkAdmin(user_email):
+  return user_email.endswith(config['admin_domain'])
+
+
+def shouldShowComments():
+  return config['enable_commenting'] and checkAdmin(users.get_current_user().email())
+
+
+def shouldEnableCommenting():
+  return config['enable_commenting'] and checkAdmin(users.get_current_user().email())
 
 
 class BaseHandler(webapp.RequestHandler):
@@ -54,6 +69,15 @@ class BaseHandler(webapp.RequestHandler):
                      '4c8a35721eafb1f780017835': 'Paris'
                  }
     return venue_to_city.get(venue)
+  
+
+class ReceiveComment(BaseHandler):
+  def post(self):
+    team_key = self.request.get('team_key')
+    text = self.request.get('text')
+    user = users.get_current_user()
+    comment(user, team_key, text)
+    self.redirect('/', {})
 
 
 class ReceiveVote(BaseHandler):
@@ -109,16 +133,50 @@ class WinnersLocal(BaseHandler):
       all_teams.sort(key=attrgetter('local_votes'))
       self.render('winnerslocal', { 'teams': all_teams, 'city': city, 'team': existing })
 
+
 class ListProjects(BaseHandler): 
   def get(self):  
-    votes = Votes.for_user(users.get_current_user())
+    current_user = users.get_current_user()
+    votes = Votes.for_user(current_user)
+    
+    team_comments = {}
+    user_comments = {}
+      
+    if shouldShowComments():
+      comments = Comment.all()
+      for comment in comments:
+        team_key = str(comment.team.key())
+        logging.debug("team_key: " + team_key)
+        if not team_key in team_comments:
+          logging.debug('adding new comment list')
+          team_comments[team_key] = []
+        if comment.user == current_user:
+          user_comments[team_key] = comment
+        team_comments[team_key].append(comment)
+            
     all_teams = Team.all().fetch(1000)
     for team in all_teams:
       team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
-    random.shuffle(all_teams)
+      team_key = str(team.key())
+      if shouldShowComments():
+        if team_key in team_comments:
+          team.comments = team_comments[team_key]
+        if team_key in user_comments:
+          team.user_comment = user_comments[team_key].text
+    
+    logout_url = users.create_logout_url("/")
+
+    if config["list_teams_randomly"]:
+      random.shuffle(all_teams)
+      
     self.render('list', { 'teams': all_teams,
                           'votes': votes,
-                          'enable_voting': config['enable_voting'] })
+                          'team_comments': team_comments,
+                          'user_comments': user_comments,
+                          'enable_voting': config['enable_voting'],
+                          'enable_commenting': shouldEnableCommenting(),
+                          'logout_url': logout_url })
+
 
 class ListProjectsLocal(BaseHandler): 
   def get(self):
@@ -173,6 +231,7 @@ class TeamPage(BaseHandler):
 application = webapp.WSGIApplication([('/', ListProjects),
                                       ('/listlocal', ListProjectsLocal),
                                       ('/vote', ReceiveVote),
+                                      ('/docomment', ReceiveComment),
                                       ('/auth', ReceiveAuth),
                                       ('/add', ProjectForm),
                                       ('/doadd', AddProject),

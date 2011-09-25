@@ -13,14 +13,14 @@ body {
 }
 
 .text {
-    font-family: Arial, Helvetica, Geneva, sans-serif;
+  font-family: Arial, Helvetica, Geneva, sans-serif;
   font-size: 20px;
   color: #5A5858;
 }
 
 
 
-.author {
+.authors {
   font-size: 10px;
 }
 
@@ -36,6 +36,7 @@ body {
   width:555px;
   background-color:#FFFFFF;
   line-height: 18px;
+  display: inline;
 }
 
 h2, .hackName {
@@ -61,13 +62,10 @@ h2 a{
   margin-left:15px;
 }
 
-
 .entryDetail img {
   margin-right:5px;
   background-color:#ffffff;
   line-height: 18px;
-
-  
 }
 
 a {
@@ -101,11 +99,16 @@ a:hover {
   
 }
 
-
 .entryDetail {
+  width: 300px;
+  display: block;
+}
+
+
+.entry {
   border-bottom: 1px solid #DDD;
   border-top: 1px solid white;
-  display: block;
+  display: inline;
   padding-bottom: 10px;
   padding-left: 10px;
   padding-right:10px;
@@ -115,8 +118,15 @@ a:hover {
   float:left;
   background-color:#ffffff;
   line-height: 18px;
+  height: 600px;
+}
 
-  
+.comments {
+	width: 300px;
+	float: right;
+	display: block;
+	border-left: 1px #EFEFEF solid;
+	padding-left: 5px;
 }
 
 /*
