@@ -17,7 +17,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from model import Team, Votes, Comment, vote, unvote, comment
 
 config = { 'enable_voting': False,
-           'enable_commenting': False,
+           'enable_commenting': True,
            'list_teams_randomly': True,
            'admin_domain': 'foursquare.com' }
 
@@ -166,7 +166,8 @@ class ListProjects(BaseHandler):
     
     logout_url = users.create_logout_url("/")
 
-    if config["list_teams_randomly"]:
+    # Disable randomness for commenting always
+    if config["list_teams_randomly"] and not shouldEnableCommenting():
       random.shuffle(all_teams)
       
     self.render('list', { 'teams': all_teams,
