@@ -19,7 +19,7 @@ from model import Team, Votes, Comment, vote, unvote, comment
 config = { 'enable_voting': False,
            'enable_commenting': True,
            'list_teams_randomly': True,
-           'highlight_winners': False,
+           'highlight_winners': True,
            'admin_domain': 'foursquare.com' }
 
 def filter_hidden(teams):
