@@ -193,7 +193,7 @@ class ListProjects(BaseHandler):
     
     logout_url = users.create_logout_url("/")
 
-    winning_teams = filter(lambda x: config['highlight_winners'] and x.annotation is not None, all_teams)
+    winning_teams = filter(lambda x: config['highlight_winners'] and x.annotation is not None and x.annotation != '', all_teams)
     all_teams = filter(lambda x: x not in winning_teams, all_teams)
 
     # Disable randomness for commenting always
