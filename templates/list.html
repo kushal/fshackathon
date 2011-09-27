@@ -11,6 +11,95 @@
     <br/>
   {% endif %}
 
+  {% if highlight_winners %}
+    <h1>PRIZE WINNERS</h1>
+  {% endif %}
+  {% for team in winning_teams %}
+    <div class="entry">
+      <div class="entryDetail" style="width: 300px; float: left">
+        <!-- <h2>WINNER of {{ team.annotation }}</h2> -->
+        <h2><a href="/team?team_key={{ team.key }}">{{ team.name|escape }}</a></h2>
+        <div class="authors">{{ team.people|escape }}<br/>
+          <span class="location">in {{ team.location|escape }}</span>
+          <br/>
+        </div>
+        <br/>
+
+        <div class="description" style="text-overflow: ellipsis;">
+          {{ team.description|escape }}
+        </div>
+
+        {% if team.url %} <img src="static/images/ico_download.png" style="width:20px;height:20px;"> {{ team.url|urlize }}<br/>{% endif %} 
+
+        {% if team.video %}  <img src="static/images/ico_video.png" style="width:20px;height:20px;"> {{ team.video|urlize }} <br/>{% endif %} <br/>
+
+        {% if team.image %}<img style="max-width:275px; max-height:150px;" src="{{ team.image }}"> <br/>{% endif %}
+
+        {% if enable_voting %}
+          <div class="vote">
+            <form action="vote" method="POST">
+              <input type="hidden" name="team_key" value="{{ team.key }}"/>
+              {% if team.voted %}
+                <input type="hidden" name="undo" value="1"/>
+                <div class="hackName">WANTED! <input type="submit" value="scratch that"/></div>
+              {% else %}       
+                <input type="image" style="font-size:15px;" src="static/images/btn_want.png" value="WANT"/>
+              {% endif %}
+            </form>
+          </div>
+        {% endif %}
+      
+        <script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
+        <div class="tweet">
+          <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" 
+	          data-url="http://fshackathon.appspot.com/team?team_key={{ team.key }}"
+	          data-text="Check out this awesome hack called {{ team.name }} from the #4sqhackathon!"
+	          data-related="anywhere:The Javascript API"
+	          data-count="vertical">Tweet</a>
+        </div>
+      </div> <!-- entrydetail -->
+
+
+      {% if enable_commenting %}
+        <div class="comments">
+          <h3>Feedback</h3>
+          {% for comment in team.comments %}
+            <span><b>{{ comment.author_name|escape }}</b></span>:
+            <span>{{ comment.text|escape }}</span>
+            <br/>
+          {% endfor %}      
+
+          <div class="comment_entry">
+            <form action="docomment" method="POST">
+              <input type="hidden" name="team_key" value="{{ team.key }}"/>
+              <textarea rows="5" cols="39" name="text"
+                  >{% if team.user_comment %}{{ team.user_comment }}{% endif %}</textarea>
+              <br/>
+              <input type=submit value="submit" />
+            </form>
+          </div>
+
+          <h3>Winning Honor (ak only, please)</h3>
+          <div class="comment_entry">
+            <form action="annotate" method="POST">
+              <input type="hidden" name="team_key" value="{{ team.key }}"/>
+              <textarea rows="5" cols="39" name="text"
+                  >{% if team.annotation %}{{ team.annotation }}{% endif %}</textarea>
+              <br/>
+              <input type=submit value="submit" />
+            </form>
+          </div>
+
+        </div>      
+      {% endif %}
+    </div>  
+  {% endfor %}
+  
+  {% if winning_teams %}
+    <div style="clear:both;">
+    <hr/>
+  {% endif %}
+ 
   {% for team in teams %}
     <div class="entry">
       <div class="entryDetail" style="width: 300px; float: left">
@@ -74,6 +163,26 @@
               <input type=submit value="submit" />
             </form>
           </div>
+
+          <h3>Winning Honor (ak only, please)</h3>
+          <div class="comment_entry">
+            <form action="annotate" method="POST">
+              <input type="hidden" name="team_key" value="{{ team.key }}"/>
+              <textarea rows="5" cols="39" name="text"
+                  >{% if team.annotation %}{{ team.annotation }}{% endif %}</textarea>
+              <br/>
+              <input type=submit value="submit" />
+            </form>
+          </div>
+            
+          <form action="hide" method="POST">
+            <input type="hidden" name="team_key" value="{{ team.key }}"/>
+            Hidden? 
+            <input type="checkbox" name="hidden" value="true"
+            {% if team.hidden %}checked{% endif %}/>
+            <input type=submit value="submit" />
+          </form>
+
         </div>      
       {% endif %}
     </div>  

@@ -15,6 +15,8 @@ class Team(db.Model):
   winner = db.TextProperty()
   votes = db.IntegerProperty(default = 0)
   local_votes = db.IntegerProperty(default = 0)
+  annotation = db.TextProperty()
+  hidden = db.BooleanProperty()
 
   @staticmethod
   def for_user(user):

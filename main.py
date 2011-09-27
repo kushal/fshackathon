@@ -19,7 +19,14 @@ from model import Team, Votes, Comment, vote, unvote, comment
 config = { 'enable_voting': False,
            'enable_commenting': True,
            'list_teams_randomly': True,
+           'highlight_winners': False,
            'admin_domain': 'foursquare.com' }
+
+def filter_hidden(teams):
+  if (checkAdmin(users.get_current_user().email())):
+    return teams
+  else:
+    return filter(lambda x: not x.hidden, teams)
 
 def fetchJson(url):
   logging.info('fetching url: ' + url)
@@ -79,6 +86,27 @@ class ReceiveComment(BaseHandler):
     comment(user, team_key, text)
     self.redirect('/', {})
 
+class ReceiveAnnotation(BaseHandler):
+  def post(self):
+    team_key = self.request.get('team_key')
+    team = Team.get(team_key)
+    text = self.request.get('text')
+    team.annotation = text
+    team.put()
+    self.redirect('/', {})
+    
+class ReceiveHide(BaseHandler):
+  def post(self):
+    team_key = self.request.get('team_key')
+    team = Team.get(team_key)
+    hidden = self.request.get('hidden')
+    if hidden == 'true':
+      team.hidden = True
+    else:
+      team.hidden = False
+    team.put()
+    self.redirect('/', {})
+
 
 class ReceiveVote(BaseHandler):
   # TODO: unvoting, local
@@ -115,7 +143,7 @@ class ReceiveAuth(BaseHandler):
 class Winners(BaseHandler):
   def get(self):
     #TODO(kushal): Support location filter
-    all_teams = Team.all().fetch(1000)
+    all_teams = filter_hidden(Team.all().fetch(1000))
     for team in all_teams:
       team.totalvotes = team.votes + team.local_votes
     all_teams.sort(key=attrgetter('totalvotes'))
@@ -123,13 +151,13 @@ class Winners(BaseHandler):
 
 class WinnersLocal(BaseHandler):
   def get(self):
-    existing = Team.for_user(users.get_current_user())
+    existing = filter_hidden(Team.for_user(users.get_current_user()))
     votes = Votes.for_user(users.get_current_user())
     city = self.get_user_city(votes)
     if city is None:
         self.render('listlocal_fail', {  })
     else:
-      all_teams = Team.for_city(city)
+      all_teams = filter_hidden(Team.for_city(city))
       all_teams.sort(key=attrgetter('local_votes'))
       self.render('winnerslocal', { 'teams': all_teams, 'city': city, 'team': existing })
 
@@ -153,7 +181,7 @@ class ListProjects(BaseHandler):
           user_comments[team_key] = comment
         team_comments[team_key].append(comment)
             
-    all_teams = Team.all().fetch(1000)
+    all_teams = filter_hidden(Team.all().fetch(1000))
     for team in all_teams:
       team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
       team_key = str(team.key())
@@ -165,14 +193,19 @@ class ListProjects(BaseHandler):
     
     logout_url = users.create_logout_url("/")
 
+    winning_teams = filter(lambda x: config['highlight_winners'] and x.annotation is not None, all_teams)
+    all_teams = filter(lambda x: x not in winning_teams, all_teams)
+
     # Disable randomness for commenting always
     if config["list_teams_randomly"] and not shouldEnableCommenting():
       random.shuffle(all_teams)
       
     self.render('list', { 'teams': all_teams,
+                          'winning_teams': winning_teams,
                           'votes': votes,
                           'team_comments': team_comments,
                           'user_comments': user_comments,
+                          'highlight_winners': config['highlight_winners'],
                           'enable_voting': config['enable_voting'],
                           'enable_commenting': shouldEnableCommenting(),
                           'logout_url': logout_url })
@@ -185,7 +218,7 @@ class ListProjectsLocal(BaseHandler):
     if city is None:
         self.render('listlocal_fail', {  })
     else:
-        all_teams = Team.for_city(city)
+        all_teams = filter_hidden(Team.for_city(city))
         votes = Votes.for_user(users.get_current_user())
         for team in all_teams:
             team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
@@ -232,6 +265,8 @@ application = webapp.WSGIApplication([('/', ListProjects),
                                       ('/listlocal', ListProjectsLocal),
                                       ('/vote', ReceiveVote),
                                       ('/docomment', ReceiveComment),
+                                      ('/annotate', ReceiveAnnotation),
+                                      ('/hide', ReceiveHide),
                                       ('/auth', ReceiveAuth),
                                       ('/add', ProjectForm),
                                       ('/doadd', AddProject),
