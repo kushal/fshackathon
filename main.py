@@ -203,6 +203,7 @@ class ListProjects(BaseHandler):
     # Disable randomness for commenting always
     if config["list_teams_randomly"] and not shouldEnableCommenting():
       random.shuffle(all_teams)
+      random.shuffle(winning_teams)
       
     self.render('list', { 'teams': all_teams,
                           'winning_teams': winning_teams,
