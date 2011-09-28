@@ -144,6 +144,8 @@ class ReceiveAuth(BaseHandler):
 
 class Winners(BaseHandler):
   def get(self):
+    if not checkAdmin(users.get_current_user().email()):
+      return self.error(403)
     #TODO(kushal): Support location filter
     all_teams = filter_hidden(Team.all().fetch(1000))
     for team in all_teams:
