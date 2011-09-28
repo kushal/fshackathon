@@ -18,6 +18,8 @@ from model import Team, Votes, Comment, vote, unvote, comment
 
 config = { 'enable_voting': False,
            'enable_commenting': True,
+           'enable_team_editing': True,
+           'enable_team_adding': False,
            'list_teams_randomly': True,
            'highlight_winners': True,
            'admin_domain': 'foursquare.com' }
@@ -224,13 +226,24 @@ class ListProjectsLocal(BaseHandler):
             team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
         self.render('listlocal', { 'city': city, 'teams': all_teams })
 
+
 class ProjectForm(BaseHandler):
   def get(self):
     existing = Team.for_user(users.get_current_user())
-    self.render('add', { 'existing': existing })
+    if config['enable_team_adding']:
+      self.render('add', { 'existing': existing })
+      return
+    if config['enable_team_editing']:
+      if existing:
+        self.render('add', { 'existing': existing })
+      else:
+        self.render('noadd', { })
+
 
 class AddProject(BaseHandler):    
   def post(self):
+    if not config['enable_team_adding']:
+      self.error(403)
     team = Team.for_user(users.get_current_user())
     if not team:
         team = Team()

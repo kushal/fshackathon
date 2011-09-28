@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div style="clear:both;">
+    <h1>Submit your project!</h1><br/>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+
+<script>
+function validateForm() {
+  
+  var mandatory = ['name', 'description', 'email', 'mailing'];
+  for (var i = 0; i < mandatory.length; i++) {
+    if ($('#' + mandatory[i]).val() == '') {
+      alert('Must provide ' + mandatory[i]);
+      return false;
+    }
+  }
+  var url = $('#url').val();
+  var video = $('#video').val();
+  var description = $('#description').val();
+  var image = $('#image').val()
+  
+  if (url == '' && video == '') {
+    alert('Must provide url or video');
+    return false;
+  }
+  
+  if (url != '' && url.indexOf('http') != 0) {
+    alert('Must provide valid url.');
+    return false;
+  }
+
+  if (description.length > 500){
+    alert('Description must be shorter than 500 characters.');
+    return false;
+  }
+  
+  if (video != '' && video.indexOf('http') != 0){
+    alert('Must provide valid video url.');
+    return false;
+  }
+
+  if (image.indexOf('http') != 0){
+    alert('Must provide valid image url.');
+    return false;
+  }
+
+  return true;
+}
+</script>
+
+<div class="content">
+  <div class="entryDetail">
+
+    <form method="POST" action="doadd" onsubmit="return validateForm()">
+
+    <div class="formlabel">TEAM NAME</div>
+    <input id="name" type="text" name="name" size="80" value="{{ existing.name }}"/>
+
+    <div class="formlabel">TEAM MEMBERS</div>
+    <input id="people" type="text" name="people" size="80" value="{{ existing.people }}"/>
+
+    <div class="formlabel">WEBSITE URL</div>
+    <input id="url" type="text" name="url" size="80" value="{{ existing.url }}"/>
+
+    <div id="locationForm" class="formlabel">LOCATION</div>
+    <select name="location">
+    <option>New York</option>
+    <option>San Francisco</option>
+    <option>Tokyo</option>
+    <option>Paris</option>
+    <option>Other</option>
+    </select>
+
+    <div class="formlabel">YOUR LOCATION, IF NOT LISTED</div>
+    <input type="text" name="otherLocation" size="80" value="{{ existing.email }}"/>
+
+    <div class="formlabel">DESCRIPTION (500 characters or less)</div>
+    <textarea id="description" cols=58 rows=4 name="description">{{ existing.description }}</textarea>
+
+    <div class="formlabel">VIDEO URL</div>
+    <input id="video" type="text" name="video" size="80" value="{{ existing.video }}"/>
+
+    <div class="formlabel">IMAGE URL (Dimensions: 275 x 150)</div>
+    <input id="image" type="text" name="image" size="80" value="{{ existing.image }}"/>
+
+    <div class="formlabel">EMAIL (will not be displayed)</div>
+    <input id="email" type="text" name="email" size="80" value="{{ existing.email }}"/>
+
+    <div class="formlabel">MAILING ADDRESS AND T-SHIRT SIZES (in case you win!)</div>
+    <textarea id="mailing" size="80" cols=58 rows=4 name="winner">{{ existing.winner }}</textarea>
+
+    <br/><br/>
+    <input type="SUBMIT"/>
+    </form><br/><br/>
+    <a href="/">back to front page</a>
+  </div>
+</div>
+
+{% endblock %}
