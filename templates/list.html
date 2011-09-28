@@ -19,7 +19,10 @@
   {% for team in winning_teams %}
     <div class="entry">
       <div class="entryDetail" style="width: 300px; float: left">
-        <!-- <h2>WINNER of {{ team.annotation }}</h2> -->
+        <h3>
+          <img src="https://d3t9wmuxo47dud.cloudfront.net/img/crown-a90b8cffe95be2f88fb5b1c203313a3d.png" style="height:25px; width:25px;vertical-align:-0.5em;"/>
+          {{ team.annotation }}
+        </h3>
         <h2><a href="/team?team_key={{ team.key }}">{{ team.name|escape }}</a></h2>
         <div class="authors">{{ team.people|escape }}<br/>
           <span class="location">in {{ team.location|escape }}</span>
