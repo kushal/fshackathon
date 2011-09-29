@@ -22,6 +22,7 @@ config = { 'enable_voting': False,
            'enable_team_adding': False,
            'list_teams_randomly': True,
            'highlight_winners': True,
+           'show_winner_entry': False,
            'admin_domain': 'foursquare.com' }
 
 def filter_hidden(teams):
@@ -213,6 +214,7 @@ class ListProjects(BaseHandler):
                           'highlight_winners': config['highlight_winners'],
                           'enable_voting': config['enable_voting'],
                           'enable_commenting': shouldEnableCommenting(),
+                          'show_winner_entry': config['show_winner_entry'],
                           'logout_url': logout_url })
 
 

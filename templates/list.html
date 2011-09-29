@@ -83,18 +83,18 @@
               <input type=submit value="submit" />
             </form>
           </div>
-
-          <h3>Winning Honor (ak only, please)</h3>
-          <div class="comment_entry">
-            <form action="annotate" method="POST">
-              <input type="hidden" name="team_key" value="{{ team.key }}"/>
-              <textarea rows="5" cols="39" name="text"
-                  >{% if team.annotation %}{{ team.annotation }}{% endif %}</textarea>
-              <br/>
-              <input type=submit value="submit" />
-            </form>
-          </div>
-
+          {% if show_winner_entry %}
+            <h3>Winning Honor (ak only, please)</h3>
+            <div class="comment_entry">
+              <form action="annotate" method="POST">
+                <input type="hidden" name="team_key" value="{{ team.key }}"/>
+                <textarea rows="5" cols="39" name="text"
+                    >{% if team.annotation %}{{ team.annotation }}{% endif %}</textarea>
+                <br/>
+                <input type=submit value="submit" />
+              </form>
+            </div>
+          {% endif %}
         </div>      
       {% endif %}
     </div>  
