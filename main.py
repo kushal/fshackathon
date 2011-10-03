@@ -18,6 +18,7 @@ from model import Team, Votes, Comment, vote, unvote, comment
 
 config = { 'enable_voting': False,
            'enable_commenting': True,
+           'show_comments': True,
            'enable_team_editing': True,
            'enable_team_adding': False,
            'list_teams_randomly': True,
@@ -51,6 +52,10 @@ def shouldShowComments():
 
 def shouldEnableCommenting():
   return config['enable_commenting'] and checkAdmin(users.get_current_user().email())
+
+
+def generateCommentAuthorName(comment):
+  return comment.user.nickname().split('@', 1)[0]
 
 
 class BaseHandler(webapp.RequestHandler):
@@ -179,7 +184,7 @@ class ListProjects(BaseHandler):
       comments = Comment.all()
       for comment in comments:
         team_key = str(comment.team.key())
-        comment.author_name = comment.user.nickname().split('@', 1)[0]
+        comment.author_name = generateCommentAuthorName(comment)
         if not team_key in team_comments:
           team_comments[team_key] = []
         if comment.user == current_user:
@@ -276,7 +281,13 @@ class TeamPage(BaseHandler):
     team = Team.get(team_key)
     votes = Votes.for_user(users.get_current_user())
     team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
-    self.render('team', { 'team': team })
+    if config['show_comments']:
+      team.comments = list(Comment.get_team_comments(team))
+    for comment in team.comments:
+      comment.author_name = generateCommentAuthorName(comment)
+
+    self.render('team', { 'team': team,
+                          'show_comments': config['show_comments']})
   
     
 application = webapp.WSGIApplication([('/', ListProjects),

@@ -58,10 +58,12 @@ class Comment(db.Model):
     return None
   @staticmethod
   def get_team_comments(team):
+    """Remember, this returns a query stream, not a mutable list!"""
     query = db.Query(Comment)
     return query.filter('team =', team)
   @staticmethod
   def get_user_comments(user):
+    """Remember, this returns a query stream, not a mutable list!"""
     query = db.Query(Comment)
     return query.filter('user =', user)
 

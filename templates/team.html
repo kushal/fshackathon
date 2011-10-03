@@ -70,6 +70,16 @@
           </div>
         </div>      
       {% endif %}
+      {% if show_comments %}
+        <div class="comments">
+          <h3>Feedback</h3>
+          {% for comment in team.comments %}
+            <span><b>{{ comment.author_name|escape }}</b></span>:
+            <span>{{ comment.text|escape }}</span>
+            <br/>
+          {% endfor %}
+        </div>
+       {% endif %}      
     </div>  
 </div> 
 
