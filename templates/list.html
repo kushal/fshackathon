@@ -77,7 +77,7 @@
           <div class="comment_entry">
             <form action="docomment" method="POST">
               <input type="hidden" name="team_key" value="{{ team.key }}"/>
-              <textarea rows="5" cols="39" name="text"
+              <textarea rows="5" cols="39" name="text" style="max-width: 300px"
                   >{% if team.user_comment %}{{ team.user_comment }}{% endif %}</textarea>
               <br/>
               <input type=submit value="submit" />
@@ -162,7 +162,7 @@
           <div class="comment_entry">
             <form action="docomment" method="POST">
               <input type="hidden" name="team_key" value="{{ team.key }}"/>
-              <textarea rows="5" cols="39" name="text"
+              <textarea rows="5" cols="39" name="text" style="max-width: 300px"
                   >{% if team.user_comment %}{{ team.user_comment }}{% endif %}</textarea>
               <br/>
               <input type=submit value="submit" />
