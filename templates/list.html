@@ -174,7 +174,7 @@
             <div class="comment_entry">
               <form action="annotate" method="POST">
                 <input type="hidden" name="team_key" value="{{ team.key }}"/>
-                <textarea rows="5" cols="39" name="text"
+                <textarea rows="5" cols="39" name="text" style="max-width: 300px"
                     >{% if team.annotation %}{{ team.annotation }}{% endif %}</textarea>
                 <br/>
                 <input type=submit value="submit" />
