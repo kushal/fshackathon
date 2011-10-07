@@ -18,6 +18,7 @@ from model import Team, Votes, Comment, vote, unvote, comment
 
 config = { 'enable_voting': False,
            'enable_commenting': True,
+           'enable_owner_commenting': True,
            'show_comments': True,
            'enable_team_editing': True,
            'enable_team_adding': False,
@@ -281,13 +282,20 @@ class TeamPage(BaseHandler):
     team = Team.get(team_key)
     votes = Votes.for_user(users.get_current_user())
     team.voted = (team.key() in votes.local_teams or team.key() in votes.teams)
+    enable_commenting = False
+    
+    user_is_owner = users.get_current_user() == team.user
+    if config["enable_owner_commenting"] and user_is_owner:
+      enable_commenting = True
+
     if config['show_comments']:
       team.comments = list(Comment.get_team_comments(team))
     for comment in team.comments:
       comment.author_name = generateCommentAuthorName(comment)
 
     self.render('team', { 'team': team,
-                          'show_comments': config['show_comments']})
+                          'show_comments': config['show_comments'],
+                          'enable_commenting': enable_commenting })
   
     
 application = webapp.WSGIApplication([('/', ListProjects),

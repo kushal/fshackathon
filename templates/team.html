@@ -62,24 +62,26 @@
           <div class="comment_entry">
             <form action="docomment" method="POST">
               <input type="hidden" name="team_key" value="{{ team.key }}"/>
-              <textarea rows="5" cols="39" name="text"
+              <textarea rows="5" cols="39" name="text" style="max-width: 300px"
                   >{% if team.user_comment %}{{ team.user_comment }}{% endif %}</textarea>
               <br/>
               <input type=submit value="submit" />
             </form>
           </div>
-        </div>      
-      {% endif %}
-      {% if show_comments %}
-        <div class="comments">
-          <h3>Feedback</h3>
-          {% for comment in team.comments %}
-            <span><b>{{ comment.author_name|escape }}</b></span>:
-            <span>{{ comment.text|escape }}</span>
-            <br/>
-          {% endfor %}
         </div>
-       {% endif %}      
+      {% else %}
+      
+        {% if show_comments %}
+          <div class="comments">
+            <h3>Feedback</h3>
+            {% for comment in team.comments %}
+              <span><b>{{ comment.author_name|escape }}</b></span>:
+              <span>{{ comment.text|escape }}</span>
+              <br/>
+            {% endfor %}
+          </div>
+        {% endif %}      
+      {% endif %}
     </div>  
 </div> 
 
